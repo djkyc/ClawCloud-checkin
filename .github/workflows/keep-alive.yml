@@ -1,4 +1,4 @@
-name: ClawCloud 自动登录保活
+name: ClawCloud 自动登录保活（多账号）
 
 on:
   schedule:
@@ -8,8 +8,8 @@ on:
 jobs:
   auto-login:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    
+    timeout-minutes: 20
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -25,13 +25,13 @@ jobs:
           playwright install chromium
           playwright install-deps
 
-      - name: 运行自动登录
+      - name: 运行多账号自动登录
         env:
-          GH_USERNAME: ${{ secrets.GH_USERNAME }}
-          GH_PASSWORD: ${{ secrets.GH_PASSWORD }}
-          GH_SESSION: ${{ secrets.GH_SESSION }}
+          GH_ACCOUNTS: ${{ secrets.GH_ACCOUNTS }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python scripts/auto_login.py
+          TWO_FACTOR_WAIT: 120
+        run: |
+          python scripts/auto_login_multi.py
